@@ -1121,6 +1121,7 @@ func (in *Pruner) DeepCopyInto(out *Pruner) {
 		*out = new(bool)
 		**out = **in
 	}
+	in.GlobalConfig.DeepCopyInto(&out.GlobalConfig)
 	in.Options.DeepCopyInto(&out.Options)
 	return
 }

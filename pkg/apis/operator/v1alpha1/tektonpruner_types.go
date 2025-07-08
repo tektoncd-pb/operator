@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"github.com/openshift-pipelines/tektoncd-pruner/pkg/config"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
 )
@@ -42,7 +43,9 @@ type TektonPruner struct {
 
 type Pruner struct {
 	// enable or disable TektonPruner Component
-	Disabled *bool `json:"disabled"`
+	Disabled     *bool               `json:"disabled"`
+	GlobalConfig config.PrunerConfig `json:"global-config"`
+
 	// options holds additions fields and these fields will be updated on the manifests
 	Options AdditionalOptions `json:"options"`
 }
@@ -58,7 +61,6 @@ type TektonPrunerList struct {
 type TektonPrunerSpec struct {
 	CommonSpec `json:",inline"`
 	Pruner     `json:",inline"`
-
 	// Config holds the configuration for resources created by TektonPruner
 	// +optional
 	Config Config `json:"config,omitempty"`

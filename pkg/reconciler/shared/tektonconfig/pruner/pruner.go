@@ -18,18 +18,25 @@ package pruner
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
 
+	corev1 "k8s.io/api/core/v1"
+
+	"github.com/openshift-pipelines/tektoncd-pruner/pkg/config"
 	"github.com/tektoncd/operator/pkg/apis/operator/v1alpha1"
 	op "github.com/tektoncd/operator/pkg/client/clientset/versioned/typed/operator/v1alpha1"
+	"gopkg.in/yaml.v3"
 	apierrs "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes"
 	"knative.dev/pkg/apis"
 )
 
-func EnsureTektonPrunerExists(ctx context.Context, clients op.TektonPrunerInterface, tp *v1alpha1.TektonPruner) (*v1alpha1.TektonPruner, error) {
+func EnsureTektonPrunerExists(ctx context.Context, clients op.TektonPrunerInterface, kubeclient kubernetes.Interface, tp *v1alpha1.TektonPruner) (*v1alpha1.TektonPruner, error) {
 	tpCR, err := GetPruner(ctx, clients, v1alpha1.TektonPrunerResourceName)
 	if err != nil {
 		if !apierrs.IsNotFound(err) {
@@ -50,6 +57,12 @@ func EnsureTektonPrunerExists(ctx context.Context, clients op.TektonPrunerInterf
 	if err != nil {
 		return nil, err
 	}
+
+	err = createOrUpdateConfigMap(ctx, kubeclient, tpCR.Spec.TargetNamespace, config.PrunerConfigMapName, tpCR.Spec.GlobalConfig)
+	if err != nil {
+		return nil, err
+	}
+
 	if !ok {
 		return nil, v1alpha1.RECONCILE_AGAIN_ERR
 	}
@@ -84,6 +97,59 @@ func GetTektonPrunerCR(config *v1alpha1.TektonConfig, operatorVersion string) *v
 func CreatePruner(ctx context.Context, clients op.TektonPrunerInterface, tp *v1alpha1.TektonPruner) error {
 	_, err := clients.Create(ctx, tp, metav1.CreateOptions{})
 	return err
+}
+
+func createOrUpdateConfigMap(ctx context.Context, kubeclient kubernetes.Interface, namespace, configMapName string, globalConfig config.PrunerConfig) error {
+	// Create YAML from globalConfig
+	yamlBytes, err := yaml.Marshal(globalConfig)
+	if err != nil {
+		return fmt.Errorf("failed to marshal globalConfig: %w", err)
+	}
+	yamlString := string(yamlBytes)
+
+	// Check if the ConfigMap already exists
+	_, err = kubeclient.CoreV1().ConfigMaps(namespace).Get(ctx, config.PrunerConfigMapName, metav1.GetOptions{})
+	data := map[string]string{
+		"global-config": yamlString,
+	}
+	if err != nil {
+		if !apierrs.IsNotFound(err) {
+			return err
+		}
+		configMap := &corev1.ConfigMap{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: config.PrunerConfigMapName,
+			},
+			Data: data,
+		}
+		configMap, err = kubeclient.CoreV1().ConfigMaps(namespace).Create(ctx, configMap, metav1.CreateOptions{})
+		if err != nil {
+			return err
+		}
+	}
+	// If the ConfigMap exists, update it with the new data
+	// Create the JSON patch
+	patch := map[string]interface{}{
+		"data": data,
+	}
+	patchBytes, err := json.Marshal(patch)
+	if err != nil {
+		return fmt.Errorf("failed to marshal patch: %w", err)
+	}
+
+	// Patch the ConfigMap
+	_, err = kubeclient.CoreV1().ConfigMaps(namespace).Patch(
+		ctx,
+		configMapName,
+		types.MergePatchType,
+		patchBytes,
+		metav1.PatchOptions{},
+	)
+	if err != nil {
+		return fmt.Errorf("failed to patch ConfigMap %s/%s: %w", namespace, configMapName, err)
+	}
+
+	return nil
 }
 
 func UpdatePruner(ctx context.Context, old *v1alpha1.TektonPruner, new *v1alpha1.TektonPruner, clients op.TektonPrunerInterface) (*v1alpha1.TektonPruner, error) {

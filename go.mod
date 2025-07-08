@@ -13,6 +13,7 @@ require (
 	github.com/manifestival/manifestival v0.7.2
 	github.com/markbates/inflect v1.0.4
 	github.com/openshift-pipelines/pipelines-as-code v0.36.0
+	github.com/openshift-pipelines/tektoncd-pruner v0.1.2
 	github.com/openshift/api v0.0.0-20240521185306-0314f31e7774
 	github.com/openshift/apiserver-library-go v0.0.0-20230816171015-6bfafa975bfb
 	github.com/openshift/client-go v0.0.0-20240523113335-452272e0496d
@@ -29,6 +30,7 @@ require (
 	golang.org/x/mod v0.25.0
 	golang.org/x/sync v0.15.0
 	gomodules.xyz/jsonpatch/v2 v2.5.0
+	gopkg.in/yaml.v3 v3.0.1
 	gotest.tools/v3 v3.5.2
 	k8s.io/api v0.33.1
 	k8s.io/apiextensions-apiserver v0.32.6
@@ -289,7 +291,6 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/gengo/v2 v2.0.0-20240911193312-2b36238f13e9 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff // indirect
