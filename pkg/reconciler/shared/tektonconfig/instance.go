@@ -78,6 +78,7 @@ func (tc tektonConfig) ensureInstance(ctx context.Context) {
 				"name", instance.GetName(),
 				"generation", instance.GetGeneration(),
 				"resourceVersion", instance.GetResourceVersion())
+			instance.SetDefaults(ctx)
 			return true, nil
 		}
 		if !apierrs.IsNotFound(err) {

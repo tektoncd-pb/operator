@@ -88,6 +88,13 @@ if grep -qw "injection" <<<"${GENS}"; then
   # Clear old injection
   rm -rf ${OUTPUT_PKG}
 
+
+echo "Running injection-gen with: $GOPATH"
+echo "OUTPUT_PKG: $OUTPUT_PKG"
+echo "LISTERS_PKG: $LISTERS_PKG"
+echo "VERSIONED_CLIENTSET_PKG: $VERSIONED_CLIENTSET_PKG"
+echo "EXTERNAL_INFORMER_PKG: $EXTERNAL_INFORMER_PKG"
+
   ${PREFIX}/injection-gen \
     --input-dirs $(codegen::join , "${FQ_APIS[@]}") \
     --versioned-clientset-package ${VERSIONED_CLIENTSET_PKG} \

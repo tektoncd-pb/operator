@@ -27,43 +27,45 @@ import (
 
 	"github.com/tektoncd/operator/pkg/client/injection/client/fake"
 	util "github.com/tektoncd/operator/pkg/reconciler/common/testing"
+	kfake "k8s.io/client-go/kubernetes/fake"
 	ts "knative.dev/pkg/reconciler/testing"
 )
 
 func TestEnsureTektonPrunerCRExists(t *testing.T) {
 	ctx, _, _ := ts.SetupFakeContextWithCancel(t)
 	c := fake.Get(ctx)
-	tt := GetTektonPrunerCR(GetTektonConfig(), "v0.70.0")
+	k := kfake.NewClientset()
+	tt := GetTektonPrunerCR(GetTektonConfig(), "v0.76.0")
 
 	// first invocation should create instance as it is non-existent and return RECONCILE_AGAIN_ERR
-	_, err := EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), tt)
+	_, err := EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), k, tt)
 	util.AssertEqual(t, err, v1alpha1.RECONCILE_AGAIN_ERR)
 
 	// during second invocation instance exists but waiting on dependencies (pipeline, Pruners)
 	// hence returns DEPENDENCY_UPGRADE_PENDING_ERR
-	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), tt)
+	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), k, tt)
 	util.AssertEqual(t, err, v1alpha1.RECONCILE_AGAIN_ERR)
 
 	// make upgrade checks pass
 	makeUpgradeCheckPass(t, ctx, c.OperatorV1alpha1().TektonPruners())
 
 	// next invocation should return RECONCILE_AGAIN_ERR as Dashboard is waiting for installation (prereconcile, postreconcile, installersets...)
-	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), tt)
+	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), k, tt)
 	util.AssertEqual(t, err, v1alpha1.RECONCILE_AGAIN_ERR)
 
 	// mark the instance ready
 	markPrunersReady(t, ctx, c.OperatorV1alpha1().TektonPruners())
 
 	// next invocation should return nil error as the instance is ready
-	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), tt)
+	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), k, tt)
 	util.AssertEqual(t, err, nil)
 
 	// test update propagation from tektonConfig
 	tt.Spec.TargetNamespace = "foobar"
-	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), tt)
+	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), k, tt)
 	util.AssertEqual(t, err, v1alpha1.RECONCILE_AGAIN_ERR)
 
-	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), tt)
+	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), k, tt)
 	util.AssertEqual(t, err, nil)
 }
 
@@ -77,7 +79,7 @@ func TestEnsureTektonPrunerCRNotExists(t *testing.T) {
 
 	// create an instance for testing other cases
 	tt := GetTektonPrunerCR(GetTektonConfig(), "v0.70.0")
-	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), tt)
+	_, err = EnsureTektonPrunerExists(ctx, c.OperatorV1alpha1().TektonPruners(), nil, tt)
 	util.AssertEqual(t, err, v1alpha1.RECONCILE_AGAIN_ERR)
 
 	// when an instance exists the first invoacation should make the delete API call and

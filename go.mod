@@ -13,6 +13,7 @@ require (
 	github.com/manifestival/manifestival v0.7.2
 	github.com/markbates/inflect v1.0.4
 	github.com/openshift-pipelines/pipelines-as-code v0.36.0
+	github.com/openshift-pipelines/tektoncd-pruner v0.0.0-20250711075231-9c8624123820
 	github.com/openshift/api v0.0.0-20240521185306-0314f31e7774
 	github.com/openshift/apiserver-library-go v0.0.0-20230816171015-6bfafa975bfb
 	github.com/openshift/client-go v0.0.0-20240523113335-452272e0496d
@@ -21,7 +22,7 @@ require (
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/tektoncd/pipeline v1.2.0
-	github.com/tektoncd/plumbing v0.0.0-20250430145243-3b7cd59879c1
+	github.com/tektoncd/plumbing v0.0.0-20250630062957-f863d38f433a
 	github.com/tektoncd/triggers v0.32.0
 	go.opencensus.io v0.24.0
 	go.uber.org/zap v1.27.0
@@ -29,6 +30,7 @@ require (
 	golang.org/x/mod v0.25.0
 	golang.org/x/sync v0.15.0
 	gomodules.xyz/jsonpatch/v2 v2.5.0
+	gopkg.in/yaml.v3 v3.0.1
 	gotest.tools/v3 v3.5.2
 	k8s.io/api v0.33.1
 	k8s.io/apiextensions-apiserver v0.32.6
@@ -54,7 +56,7 @@ require (
 	cloud.google.com/go/auth v0.16.2 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.7.0 // indirect
-	contrib.go.opencensus.io/exporter/ocagent v0.7.1-0.20200907061046-05415f1de66d // indirect
+	contrib.go.opencensus.io/exporter/ocagent v0.7.1-0.20230502190836-7399e0f8ee5e // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	cuelabs.dev/go/oci/ociregistry v0.0.0-20241125120445-2c00c104c6e1 // indirect
 	cuelang.org/go v0.12.1 // indirect
@@ -289,7 +291,6 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/gengo/v2 v2.0.0-20240911193312-2b36238f13e9 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff // indirect
