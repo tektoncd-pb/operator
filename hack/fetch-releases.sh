@@ -184,6 +184,56 @@ release_yaml_github() {
     echo "Info: Added $component/$releaseFileName:$version release yaml !!"
 
 }
+# release_yaml_oracle <component>
+# Example yaml: https://infra.tekton.dev/tekton-releases/pruner/previous/v0.3.0/release.yaml
+release_yaml_oracle() {
+  local github_component version releaseFileName destFileName component url
+
+  component=$1
+  echo fetching $component release yaml from oracle cloud
+
+  github_component=$(yq .$component.github ${CONFIG})
+  version=$(yq .$component.version ${CONFIG})
+  releaseFileName=release.yaml
+  destFileName=$releaseFileName
+
+  echo "$github_component version is $version"
+
+  dirVersion=${version/v/}
+  url="https://infra.tekton.dev/tekton-releases/$component/previous/$version/$releaseFileName"
+  echo "URL to download Release YAML is : $url"
+
+    ko_data=${SCRIPT_DIR}/cmd/${TARGET}/operator/kodata
+    comp_dir=${ko_data}/${component}
+    dirPath=${comp_dir}/${dirVersion}
+
+    # destination file
+    dest=${dirPath}/${destFileName}
+    echo $dest
+
+    if [ -f "$dest" ] && [ $FORCE_FETCH_RELEASE = "false" ]; then
+      label="app.kubernetes.io/version: \"$version\""
+      label2="app.kubernetes.io/version: $version"
+      label3="version: \"$version\""
+      if grep -Eq "$label" $dest || grep -Eq "$label2" $dest || grep -Eq "$label3" $dest;
+      then
+          echo "release file already exist with required version, skipping!"
+          echo ""
+          return
+      fi
+    fi
+
+    # create a directory
+    mkdir -p ${dirPath} || true
+
+    http_response=$(curl -s -L -o ${dest} -w "%{http_code}" ${url})
+    if [[ $http_response != "200" ]]; then
+        echo "Error: failed to get $component yaml, status code: $http_response"
+        exit 1
+    fi
+    echo "Info: Added $component/$releaseFileName:$version release yaml !!"
+
+}
 
 # release_yaml_pac <component> <release-yaml-name> <version>
 release_yaml_pac() {
@@ -411,7 +461,7 @@ main() {
 
   # copy pruner rbac/sa yaml
   copy_pruner_yaml
-  release_yaml_github pruner
+  release_yaml_oracle pruner
 
   echo updated payload tree
   find cmd/${TARGET}/operator/kodata
