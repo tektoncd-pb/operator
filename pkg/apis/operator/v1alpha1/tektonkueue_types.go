@@ -42,10 +42,10 @@ type TektonKueue struct {
 
 type Kueue struct {
 	// enable or disable TektonKueue Component
-	Disabled *bool `json:"disabled"`
+	Disabled *bool `json:"disabled,omitempty"`
 
 	// options holds additions fields and these fields will be updated on the manifests
-	Options AdditionalOptions `json:"options"`
+	Options AdditionalOptions `json:"options,omitempty"`
 }
 
 // TektonKueueList contains a list of TektonKueue
