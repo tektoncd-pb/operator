@@ -106,34 +106,34 @@ kubectl delete tektoninstallerset <installer-set-name>
 #### Images supported in OpenShift
 Supports all the images listed above in kubernetes and following are specific to OpenShift
 
-| Component             | Container/Args name               | Environment Variable                                |
-|-----------------------|-----------------------------------|-----------------------------------------------------|
-| Pipeline-as-code      | pac-controller                    | `IMAGE_PAC_PAC_CONTROLLER`                          |
-| Pipeline-as-code      | pac-webhook                       | `IMAGE_PAC_PAC_WEBHOOK`                             |
-| Pipeline-as-code      | pac-watcher                       | `IMAGE_PAC_PAC_WATCHER`                             |
-| Console Plugin        | console-plugin                    | `IMAGE_PIPELINES_CONSOLE_PLUGIN`                    |
-| Results               | retention-policy-agent            | `IMAGE_RESULTS_RETENTION_POLICY_AGENT`              |
-| Addons                |                                   | `IMAGE_ADDONS_BUILD`                                |
-| Addons                |                                   | `IMAGE_ADDONS_GENERATE`                             |
-| Addons                |                                   | `IMAGE_ADDONS_GEN_ENV_FILE`                         |
-| Addons                |                                   | `IMAGE_ADDONS_GIT_RUN`                              |
-| Addons                |                                   | `IMAGE_ADDONS_KN`                                   |
-| Addons                |                                   | `IMAGE_ADDONS_LOAD_SCRIPTS`                         |
-| Addons                |                                   | `IMAGE_ADDONS_MAVEN_GENERATE`                       |
-| Addons                |                                   | `IMAGE_ADDONS_MAVEN_GOALS`                          |
-| Addons                |                                   | `IMAGE_ADDONS_MVN_SETTINGS`                         |
-| Addons                |                                   | `IMAGE_ADDONS_OC`                                   |
-| Addons                |                                   | `IMAGE_ADDONS_PARAM_BUILDER_IMAGE`                  |
-| Addons                |                                   | `IMAGE_ADDONS_PARAM_GITINITIMAGE`                   |
-| Addons                |                                   | `IMAGE_ADDONS_PARAM_KN_IMAGE`                       |
-| Addons                |                                   | `IMAGE_ADDONS_PARAM_MAVEN_IMAGE`                    |
-| Addons                |                                   | `IMAGE_ADDONS_PARAM_TKN_IMAGE`                      |
-| Addons                |                                   | `IMAGE_ADDONS_PREPARE`                              |
-| Addons                |                                   | `IMAGE_ADDONS_REPORT`                               |
-| Addons                |                                   | `IMAGE_ADDONS_S2I_BUILD`                            |
-| Addons                |                                   | `IMAGE_ADDONS_S2I_GENERATE`                         |
-| Addons                |                                   | `IMAGE_ADDONS_SKOPEO_COPY`                          |
-| Addons                |                                   | `IMAGE_ADDONS_SKOPEO_RESULTS`                       |
-| Addons                |                                   | `IMAGE_ADDONS_TKN`                                  |
-| Addons                |                                   | `IMAGE_ADDONS_TKN_CLI_SERVE`                        |
-| Addons                |                                   | `IMAGE_ADDONS_TKN_CLI_SERVE_INIT_CONFIG`            |
+| Component             | Container/Args name               | Environment Variable                                                      |
+|-----------------------|-----------------------------------|---------------------------------------------------------------------------|
+| Pipeline-as-code      | pac-controller                    | `IMAGE_PAC_PAC_CONTROLLER`                                                |
+| Pipeline-as-code      | pac-webhook                       | `IMAGE_PAC_PAC_WEBHOOK`                                                   |
+| Pipeline-as-code      | pac-watcher                       | `IMAGE_PAC_PAC_WATCHER`                                                   |
+| Console Plugin        | console-plugin                    | `IMAGE_PIPELINES_CONSOLE_PLUGIN`, `IMAGE_PIPELINES_CONSOLE_PLUGIN_LEGACY` |
+| Results               | retention-policy-agent            | `IMAGE_RESULTS_RETENTION_POLICY_AGENT`                                    |
+| Addons                |                                   | `IMAGE_ADDONS_BUILD`                                                      |
+| Addons                |                                   | `IMAGE_ADDONS_GENERATE`                                                   |
+| Addons                |                                   | `IMAGE_ADDONS_GEN_ENV_FILE`                                               |
+| Addons                |                                   | `IMAGE_ADDONS_GIT_RUN`                                                    |
+| Addons                |                                   | `IMAGE_ADDONS_KN`                                                         |
+| Addons                |                                   | `IMAGE_ADDONS_LOAD_SCRIPTS`                                               |
+| Addons                |                                   | `IMAGE_ADDONS_MAVEN_GENERATE`                                             |
+| Addons                |                                   | `IMAGE_ADDONS_MAVEN_GOALS`                                                |
+| Addons                |                                   | `IMAGE_ADDONS_MVN_SETTINGS`                                               |
+| Addons                |                                   | `IMAGE_ADDONS_OC`                                                         |
+| Addons                |                                   | `IMAGE_ADDONS_PARAM_BUILDER_IMAGE`                                        |
+| Addons                |                                   | `IMAGE_ADDONS_PARAM_GITINITIMAGE`                                         |
+| Addons                |                                   | `IMAGE_ADDONS_PARAM_KN_IMAGE`                                             |
+| Addons                |                                   | `IMAGE_ADDONS_PARAM_MAVEN_IMAGE`                                          |
+| Addons                |                                   | `IMAGE_ADDONS_PARAM_TKN_IMAGE`                                            |
+| Addons                |                                   | `IMAGE_ADDONS_PREPARE`                                                    |
+| Addons                |                                   | `IMAGE_ADDONS_REPORT`                                                     |
+| Addons                |                                   | `IMAGE_ADDONS_S2I_BUILD`                                                  |
+| Addons                |                                   | `IMAGE_ADDONS_S2I_GENERATE`                                               |
+| Addons                |                                   | `IMAGE_ADDONS_SKOPEO_COPY`                                                |
+| Addons                |                                   | `IMAGE_ADDONS_SKOPEO_RESULTS`                                             |
+| Addons                |                                   | `IMAGE_ADDONS_TKN`                                                        |
+| Addons                |                                   | `IMAGE_ADDONS_TKN_CLI_SERVE`                                              |
+| Addons                |                                   | `IMAGE_ADDONS_TKN_CLI_SERVE_INIT_CONFIG`                                  |
